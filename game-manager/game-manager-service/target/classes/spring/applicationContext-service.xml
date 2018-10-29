@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--这个就是spring配置文件里面需要使用到aop的标签，
+声明前缀为aop的命名空间，后面的URL用于标示命名空间的地址不会被解析器用于查找信息。
+其惟一的作用是赋予命名空间一个惟一的名称。当命名空间被定义在元素的开始标签中时，所有带有相同前缀的子元素都会与同一个命名空间相关联。
+然后其他比如context（针对组件标签）、MVC（针对mvc标签）、tx（针对事务标签）都一样的意思。  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<context:component-scan base-package="com.game.service"></context:component-scan>
+	
+	<!-- 使用dubbo发布服务 -->
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="game-manager" />
+	<!-- 用dubbo协议在地址是192.168.25.128:2181注册服务 -->
+	<dubbo:registry protocol="zookeeper" address="192.168.200.128:2181" />
+	<!-- 用dubbo协议在20880端口暴露服务 name属性值是固定值"dubbo" -->
+	<dubbo:protocol name="dubbo" port="20880" />
+	<!-- 声明需要暴露的服务接口,textServiceImpl 是context:component-scan 扫描包@Service自动装配bean，id默认为类的首字母小写 -->
+	<dubbo:service interface="com.game.service.TestService" ref="testServiceImpl" timeout="100000" />
+	
+</beans>
